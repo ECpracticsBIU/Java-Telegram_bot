@@ -1,5 +1,6 @@
 package ru.lashin.tg.telegram.bot;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,8 +13,8 @@ public class Bot extends TelegramLongPollingBot {
 
     private final ApplicationProperties properties;
 
+    @Autowired
     public Bot(ApplicationProperties properties) {
-        super(properties.getToken());
         this.properties = properties;
     }
 
@@ -22,7 +23,7 @@ public class Bot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String text = update.getMessage().getText();
             SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(update.getMessage().getChatId());
+            sendMessage.setChatId(String.valueOf(update.getMessage().getChatId()));
             sendMessage.setText(text);
             try {
                 execute(sendMessage);
@@ -35,5 +36,10 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return properties.getUsername();
+    }
+
+    @Override
+    public String getBotToken() {
+        return properties.getToken();
     }
 }
