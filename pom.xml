@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.lashin</groupId>
 	<artifactId>tg</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.2.0-SNAPSHOT</version>
 	<name>tg</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -49,6 +49,15 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

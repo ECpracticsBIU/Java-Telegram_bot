@@ -16,7 +16,6 @@ public class TgApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TgApplication.class, args);
-
     }
 
     @Bean
@@ -27,5 +26,4 @@ public class TgApplication {
         log.info("Бот успешно зарегистрирован");
         return botsApi;
     }
-
 }
