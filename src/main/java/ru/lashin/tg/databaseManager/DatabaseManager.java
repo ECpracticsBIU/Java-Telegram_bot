@@ -89,4 +89,14 @@ public class DatabaseManager {
             log.error("Ошибка удаления записи \n" + e.getCause().getMessage());
         }
     }
+
+    public boolean containsUserId(Long userId) {
+        String sql = "select exists(select 1 from test.admin_ids where admin_id = ?);";
+        try {
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, userId));
+        } catch (DataAccessException e) {
+            log.error("Ошибка доступа к списку администраторов \n{}", e.getCause().getMessage());
+        }
+        return false;
+    }
 }
