@@ -7,10 +7,24 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Фабрика создания UI-клавиатуры.
+ */
+
 @Component
 public class KeyboardFactory {
 
-    public InlineKeyboardMarkup createKeyboard(List<String> text, List<Integer> configuration, List<String> data) {
+    /**
+     *
+     * @param text текст кнопок;
+     * @param configuration конфигурация расположения кнопок;
+     * @param data callback data кнопок.
+     * @return сконфигурированная InlineKeyboardMarkup.
+     */
+    public InlineKeyboardMarkup createKeyboard(
+            List<String> text,
+            List<Integer> configuration,
+            List<String> data) {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         int index = 0;
         for (Integer rowNumber : configuration) {

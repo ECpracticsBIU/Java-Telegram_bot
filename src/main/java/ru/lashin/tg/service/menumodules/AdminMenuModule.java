@@ -1,4 +1,4 @@
-package ru.lashin.tg.service.menuModules;
+package ru.lashin.tg.service.menumodules;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,17 +8,16 @@ import ru.lashin.tg.service.keyboard.KeyboardFactory;
 import java.util.List;
 
 @Component
-public class AdminMenuModule implements MenuModule {
+public class AdminMenuModule extends MenuModule {
 
-    private final KeyboardFactory keyboardFactory;
 
     @Autowired
     public AdminMenuModule(KeyboardFactory keyboardFactory) {
-        this.keyboardFactory = keyboardFactory;
+        super(keyboardFactory);
     }
 
     @Override
-    public InlineKeyboardMarkup getButtonMenuInterface() {
+    public InlineKeyboardMarkup getInlineKeyboardMenuInterface() {
         return keyboardFactory.createKeyboard(
                 List.of(
                         "Get style",
@@ -29,13 +28,13 @@ public class AdminMenuModule implements MenuModule {
                         "Remove from whitelist",
                         "Назад"),
                 List.of(3, 3, 1),
-                // TODO здесь потом будет callback data
-                List.of("получить_промт",
-                        "добавить_промт",
-                        "удалить_промт",
-                        "получить_белый список",
-                        "добавить_в_белый список",
-                        "удалить_из_белого списка",
-                        "назад"));
+                List.of("getStyleButtonAction",
+                        "addStyleButtonAction",
+                        "removeStyleButtonAction",
+                        "getWhitelistButtonAction",
+                        "addToWhitelistButtonAction",
+                        "removeFromWhitelistButtonAction",
+                        "adminBackButtonMenu")
+        );
     }
 }
