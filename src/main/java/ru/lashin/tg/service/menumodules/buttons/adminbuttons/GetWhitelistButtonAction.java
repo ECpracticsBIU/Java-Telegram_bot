@@ -1,12 +1,13 @@
-package ru.lashin.tg.service.handlers.buttons.adminbuttons;
+package ru.lashin.tg.service.menumodules.buttons.adminbuttons;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.lashin.tg.databasemanager.DatabaseManager;
-import ru.lashin.tg.service.handlers.buttons.ButtonAction;
+import ru.lashin.tg.databasemanager.WhiteListDatabaseManager;
+import ru.lashin.tg.service.menumodules.buttons.ButtonAction;
 import ru.lashin.tg.service.resources.AnswerMethodFactory;
 import ru.lashin.tg.service.resources.exceptions.NotFoundDataException;
 
@@ -20,12 +21,14 @@ import java.util.List;
 @Component
 public class GetWhitelistButtonAction extends ButtonAction {
 
+    private final WhiteListDatabaseManager databaseManager;
 
     @Autowired
     public GetWhitelistButtonAction(
-            DatabaseManager databaseManager,
+            @Qualifier("whiteListDatabaseManager") WhiteListDatabaseManager databaseManager,
             AnswerMethodFactory answerMethodFactory) {
-        super(databaseManager, answerMethodFactory);
+        super(answerMethodFactory);
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class GetWhitelistButtonAction extends ButtonAction {
         return answerMethodFactory.getSendMessage(
                 update.getMessage().getChatId(),
                 result.toString(),
-                null);
+                null
+        );
     }
 }

@@ -8,8 +8,10 @@ import ru.lashin.tg.service.resources.AnswerMethodFactory;
 @Component
 public class UnknownCommand extends Command {
 
+    private final AnswerMethodFactory answerMethodFactory;
+
     public UnknownCommand(AnswerMethodFactory answerMethodFactory) {
-        super(answerMethodFactory);
+        this.answerMethodFactory = answerMethodFactory;
     }
 
     @Override

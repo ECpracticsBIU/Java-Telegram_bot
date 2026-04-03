@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.lashin.tg.service.handlers.ExceptionHandler;
 import ru.lashin.tg.service.handlers.Handler;
 import ru.lashin.tg.service.resources.exceptions.UserException;
-import java.util.Map;
 
 /**
  * Класс отвечает за маршрутизацию и распределение входящего обновления по соответствующим обработчикам.
@@ -18,15 +17,24 @@ import java.util.Map;
 @Component
 public class UpdateDispatcher {
 
-    private final Map<String, Handler> handlers;
+    private final Handler callbackQueryHandler;
+    private final Handler commandQueryHandler;
+    private final Handler messageQueryHandler;
     private final Handler defaultHandler;
-    private  final ExceptionHandler exceptionHandler;
+    private final ExceptionHandler exceptionHandler;
+
+
 
     @Autowired
     public UpdateDispatcher(
-            Map<String, Handler> handlers,
-            @Qualifier("unknownUpdateQueryHandler") Handler defaultHandler, ExceptionHandler exceptionHandler) {
-        this.handlers = handlers;
+            @Qualifier("callbackQueryHandler") Handler callbackQueryHandler,
+            @Qualifier("commandQueryHandler") Handler commandQueryHandler,
+            @Qualifier("messageQueryHandler") Handler messageQueryHandler,
+            @Qualifier("unknownUpdateQueryHandler") Handler defaultHandler,
+            ExceptionHandler exceptionHandler) {
+        this.callbackQueryHandler = callbackQueryHandler;
+        this.commandQueryHandler = commandQueryHandler;
+        this.messageQueryHandler = messageQueryHandler;
         this.defaultHandler = defaultHandler;
         this.exceptionHandler = exceptionHandler;
     }
@@ -35,15 +43,14 @@ public class UpdateDispatcher {
         try {
             if (update.hasCallbackQuery()) {
                 update.getCallbackQuery().getMessage().getChatId();
-                return handlers.get("callbackQueryHandler").answer(update);
+                return callbackQueryHandler.answer(update);
             }
-            update.getMessage().getChatId();
             if (update.hasMessage() && update.getMessage().hasText()) {
                 String text = update.getMessage().getText();
                 if (text.startsWith("/")) {
-                    return handlers.get("commandQueryHandler").answer(update);
+                    return commandQueryHandler.answer(update);
                 }
-                return handlers.get("messageQueryHandler").answer(update);
+                return messageQueryHandler.answer(update);
             }
             log.info("Неподдерживаемая операция: {}", update);
             return defaultHandler.answer(update);

@@ -1,4 +1,4 @@
-package ru.lashin.tg.service.keyboard;
+package ru.lashin.tg.service.resources.keyboard;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -16,9 +16,9 @@ public class KeyboardFactory {
 
     /**
      *
-     * @param text текст кнопок;
+     * @param text          текст кнопок;
      * @param configuration конфигурация расположения кнопок;
-     * @param data callback data кнопок.
+     * @param data          callback data кнопок.
      * @return сконфигурированная InlineKeyboardMarkup.
      */
     public InlineKeyboardMarkup createKeyboard(
@@ -36,6 +36,24 @@ public class KeyboardFactory {
                 row.add(button);
                 index++;
             }
+            keyboard.add(row);
+        }
+        return InlineKeyboardMarkup.builder()
+                .keyboard(keyboard)
+                .build();
+    }
+
+    public InlineKeyboardMarkup createVerticalKeyboard(
+            List<String> text,
+            List<String> data
+    ) {
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        for (int i = 0; i < text.size(); i++) {
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            InlineKeyboardButton button = new InlineKeyboardButton();
+            button.setText(text.get(i));
+            button.setCallbackData(data.get(i));
+            row.add(button);
             keyboard.add(row);
         }
         return InlineKeyboardMarkup.builder()
