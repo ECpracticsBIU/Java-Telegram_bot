@@ -1,6 +1,7 @@
 package ru.lashin.tg.service.resources;
 
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -26,6 +27,17 @@ public class AnswerMethodFactory {
         return DeleteMessage.builder()
                 .chatId(chatId)
                 .messageId(messageId)
+                .build();
+    }
+
+    public AnswerCallbackQuery getAnswerCallBackQuery(
+            String callbackQueryId,
+            String text,
+            boolean showAlert) {
+        return AnswerCallbackQuery.builder()
+                .callbackQueryId(callbackQueryId)
+                .text(text)
+                .showAlert(showAlert)
                 .build();
     }
 }

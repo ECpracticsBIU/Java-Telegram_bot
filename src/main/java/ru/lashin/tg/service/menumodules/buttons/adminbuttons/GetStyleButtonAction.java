@@ -1,12 +1,13 @@
-package ru.lashin.tg.service.handlers.buttons.adminbuttons;
+package ru.lashin.tg.service.menumodules.buttons.adminbuttons;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.lashin.tg.databasemanager.DatabaseManager;
-import ru.lashin.tg.service.handlers.buttons.TwoStageButtonAction;
+import ru.lashin.tg.databasemanager.StyleDatabaseManager;
+import ru.lashin.tg.service.menumodules.buttons.TwoStageButtonAction;
 import ru.lashin.tg.service.resources.AnswerMethodFactory;
 import ru.lashin.tg.service.resources.exceptions.NotFoundDataException;
 
@@ -17,20 +18,23 @@ import ru.lashin.tg.service.resources.exceptions.NotFoundDataException;
 @Component
 public class GetStyleButtonAction extends TwoStageButtonAction {
 
+    private final StyleDatabaseManager databaseManager;
 
     @Autowired
     public GetStyleButtonAction(
-            DatabaseManager databaseManager,
+            @Qualifier("styleDatabaseManager") StyleDatabaseManager databaseManager,
             AnswerMethodFactory answerMethodFactory) {
-        super(databaseManager, answerMethodFactory);
+        super(answerMethodFactory);
+        this.databaseManager = databaseManager;
     }
 
     @Override
     public BotApiMethod<?> requestData(Update update) {
-        return answerMethodFactory.getSendMessage(
-                update.getCallbackQuery().getMessage().getChatId(),
+        return answerMethodFactory.getAnswerCallBackQuery(
+                update.getCallbackQuery().getId(),
                 "Введите название style:",
-                null);
+                true
+        );
     }
 
     @Override

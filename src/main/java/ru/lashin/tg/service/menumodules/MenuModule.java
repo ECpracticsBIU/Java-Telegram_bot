@@ -1,7 +1,8 @@
 package ru.lashin.tg.service.menumodules;
 
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
-import ru.lashin.tg.service.keyboard.KeyboardFactory;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.lashin.tg.service.resources.keyboard.KeyboardFactory;
 
 /**
  * Класс, наследующий данную абстракцию, будет предоставлять пользователю специализированное меню для взаимодействия с
@@ -19,5 +20,7 @@ public abstract class MenuModule {
      * Переопределение метода настраивает технические аспекты отображения меню взаимодействия с ботом.
      * @return UI взаимодействия с конкретным меню.
      */
-    public abstract ReplyKeyboard getInlineKeyboardMenuInterface();
+    public abstract BotApiMethod<?> provide(Update update);
+
+    public abstract BotApiMethod<?> forbid(Update update);
 }

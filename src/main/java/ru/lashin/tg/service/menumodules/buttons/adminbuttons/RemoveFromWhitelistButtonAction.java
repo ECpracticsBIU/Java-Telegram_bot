@@ -1,13 +1,14 @@
-package ru.lashin.tg.service.handlers.buttons.adminbuttons;
+package ru.lashin.tg.service.menumodules.buttons.adminbuttons;
 
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.lashin.tg.databasemanager.DatabaseManager;
-import ru.lashin.tg.service.handlers.buttons.TwoStageButtonAction;
+import ru.lashin.tg.databasemanager.WhiteListDatabaseManager;
+import ru.lashin.tg.service.menumodules.buttons.TwoStageButtonAction;
 import ru.lashin.tg.service.resources.AnswerMethodFactory;
 import ru.lashin.tg.service.resources.exceptions.IncorrectInputDataException;
 
@@ -19,26 +20,29 @@ import ru.lashin.tg.service.resources.exceptions.IncorrectInputDataException;
 @Component
 public class RemoveFromWhitelistButtonAction extends TwoStageButtonAction {
 
+    private final WhiteListDatabaseManager databaseManager;
 
     @Autowired
     public RemoveFromWhitelistButtonAction(
-            DatabaseManager databaseManager,
+            @Qualifier("whiteListDatabaseManager") WhiteListDatabaseManager databaseManager,
             AnswerMethodFactory answerMethodFactory) {
-        super(databaseManager, answerMethodFactory);
+        super(answerMethodFactory);
+        this.databaseManager = databaseManager;
     }
 
     @Override
     public BotApiMethod<?> requestData(Update update) {
-        return answerMethodFactory.getSendMessage(
-                update.getCallbackQuery().getMessage().getChatId(),
+        return answerMethodFactory.getAnswerCallBackQuery(
+                update.getCallbackQuery().getId(),
                 "Введите имя пользователя для удаления из белого списка:",
-                null);
+                true
+        );
     }
 
     @Override
     public BotApiMethod<?> execute(Update update) {
         try {
-            Integer userId = Integer.parseInt(update.getMessage().getText());
+            String userId = update.getMessage().getText();
             int count = databaseManager.removeFromWhitelist(userId);
             if (count == 0) throw new IncorrectInputDataException(userId + " отсутствует в БД");
         } catch (NumberFormatException e) {
